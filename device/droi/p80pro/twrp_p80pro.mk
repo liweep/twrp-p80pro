@@ -15,7 +15,6 @@ PRODUCT_RELEASE_NAME := p80pro
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
 PRODUCT_SHIPPING_API_LEVEL := 30
 
-# The prebuilt kernel is installed by the build system's kernel tasks, which
-# this TWRP manifest does not always include; copy it to PRODUCT_OUT/kernel
-# ourselves so the bootimage rule always finds it.
-PRODUCT_COPY_FILES += $(DEVICE_PATH)/prebuilt/kernel:kernel
+# vendor/twrp/build/tasks/kernel.mk copies TARGET_PREBUILT_KERNEL to
+# $(PRODUCT_OUT)/kernel itself (NEEDS_KERNEL_COPY), so no PRODUCT_COPY_FILES
+# rule for "kernel" here - that would override the same target.
