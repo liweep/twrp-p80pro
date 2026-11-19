@@ -15,12 +15,24 @@ echo "== disk before =="
 df -h /workspace | tail -1
 
 echo "== installing build dependencies =="
-apt-get update
-apt-get install -y --no-install-recommends \
-    bc bison build-essential curl flex g++-multilib gcc-multilib git gnupg gperf \
+# GitHub runners sit in Azure; the default archive.ubuntu.com is often
+# throttled to a crawl there, so use the in-cloud mirror.
+sed -i 's|//archive.ubuntu.com|//azure.archive.ubuntu.com|g; s|//security.ubuntu.com|//azure.archive.ubuntu.com|g' /etc/apt/sources.list
+apt-get -o Acquire::Retries=5 -o Acquire::http::Timeout=60 update
+PKGS="bc bison build-essential curl flex g++-multilib gcc-multilib git gnupg gperf \
     imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev libelf-dev liblz4-tool \
     libncurses5 libncurses5-dev libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop \
-    openjdk-11-jdk-headless pngcrush rsync schedtool squashfs-tools unzip xsltproc zip zlib1g-dev python3 python-is-python3
+    openjdk-11-jdk-headless pngcrush rsync schedtool squashfs-tools unzip xsltproc zip \
+    zlib1g-dev python3 python-is-python3"
+for attempt in 1 2 3; do
+    apt-get install -y --no-install-recommends --fix-missing \
+        -o Acquire::Retries=5 -o Acquire::http::Timeout=60 $PKGS && break
+    echo "apt install attempt $attempt failed"
+    if [ "$attempt" = 3 ]; then
+        exit 1
+    fi
+    apt-get -o Acquire::Retries=5 -o Acquire::http::Timeout=60 update
+done
 
 git config --global user.name "p80pro-ci"
 git config --global user.email "p80pro-ci@localhost"
