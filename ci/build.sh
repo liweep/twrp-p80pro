@@ -48,6 +48,8 @@ mkdir -p "$SRC"
 cd "$SRC"
 repo init -u https://github.com/minimal-manifest-twrp/platform_manifest_twrp_aosp.git \
     -b twrp-11 --depth=1
+mkdir -p "$SRC/.repo/local_manifests"
+cp /workspace/ci/local_manifest.xml "$SRC/.repo/local_manifests/"
 
 echo "== repo sync =="
 for i in 1 2 3; do
