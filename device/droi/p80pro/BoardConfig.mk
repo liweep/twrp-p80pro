@@ -38,12 +38,11 @@ BOARD_MKBOOTIMG_ARGS := --header_version 2 \
 # A/B device, recovery lives in the boot ramdisk
 BOARD_USES_RECOVERY_AS_BOOT := true
 BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT := false
-# Separate logical partitions. Without these, rootdir makes root/vendor and
-# root/product symlinks into /system, which then clash with the vendor files
-# TWRP installs into recovery/root/vendor (rsync cannot replace a non-empty
-# directory with a symlink).
-BOARD_USES_VENDORIMAGE := true
-BOARD_USES_PRODUCTIMAGE := true
+# The device uses a separate logical vendor partition. board_config.mk derives
+# BOARD_USES_VENDORIMAGE from this; with the default (system/vendor) rootdir
+# creates root/vendor as a symlink, which rsync cannot lay over the vendor
+# files TWRP installs into recovery/root/vendor.
+TARGET_COPY_OUT_VENDOR := vendor
 AB_OTA_UPDATER := true
 AB_OTA_PARTITIONS := boot dtbo system vendor product
 BOARD_BOOTIMAGE_PARTITION_SIZE := 33554432
