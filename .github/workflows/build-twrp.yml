@@ -1,0 +1,39 @@
+name: Build TWRP boot image
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 360
+    steps:
+      - name: Checkout device tree
+        uses: actions/checkout@v4
+
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
+          sudo apt-get clean
+          df -h /
+
+      - name: Build (Ubuntu 20.04 container)
+        run: |
+          docker run --rm \
+            -v "$GITHUB_WORKSPACE":/workspace \
+            -w /workspace \
+            public.ecr.aws/docker/library/ubuntu:20.04 \
+            bash /workspace/ci/build.sh
+
+      - name: Upload boot.img
+        uses: actions/upload-artifact@v4
+        with:
+          name: twrp-p80pro-boot
+          path: |
+            boot.img
+            boot.img.sha256
+            recovery.img
+          if-no-files-found: error
+          retention-days: 30

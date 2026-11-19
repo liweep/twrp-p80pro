@@ -1,0 +1,5 @@
+src/
+*.img
+*.img.sha256
+out/
+.repo/
