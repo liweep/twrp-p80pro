@@ -1,0 +1,3 @@
+<manifest>
+  <remove-project name="platform/external/tensorflow" />
+</manifest>
