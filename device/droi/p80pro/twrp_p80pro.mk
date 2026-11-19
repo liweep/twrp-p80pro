@@ -1,7 +1,7 @@
 DEVICE_PATH := device/droi/p80pro
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
-$(call inherit-product, $(SRC_TARGET_DIR)/product/embedded.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/base.mk)
 $(call inherit-product, vendor/twrp/config/common.mk)
 $(call inherit-product, $(DEVICE_PATH)/device.mk)
 
