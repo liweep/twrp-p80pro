@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -eo pipefail
+
+# AOSP envsetup.sh is not nounset-safe (ZSH_VERSION etc.), keep set -u off.
 
 SRC=/workspace/src
 DEVICE_SRC=/workspace/device/droi/p80pro
